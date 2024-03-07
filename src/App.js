@@ -46,8 +46,21 @@ function Webcall() {
                     // Answer the call and display the remote stream
                     call?.answer(mediaStream)
                     call.on('stream', function (remoteStream) {
-                        remoteVideoRef.current.srcObject = remoteStream
-                        remoteVideoRef?.current?.play()
+                        console.log(
+                            'remoteStream',
+                            remoteStream,
+                            remoteVideoRef.current,
+                            remoteVideoRef.current.srcObject
+                        )
+                        if (!remoteVideoRef.current.srcObject) {
+                            remoteVideoRef.current.srcObject = remoteStream
+                            remoteVideoRef?.current?.play()
+                        }
+                    })
+                    // Handle call termination by either party
+                    call.on('close', () => {
+                        console.log('Call closed')
+                        hangUp() // Terminate call on callee's side as well
                     })
                     // Store the local media stream
                     localStream.current = mediaStream
@@ -87,8 +100,10 @@ function Webcall() {
 
                 call.on('stream', (remoteStream) => {
                     console.log('remoteStream', remoteStream)
-                    remoteVideoRef.current.srcObject = remoteStream
-                    remoteVideoRef?.current?.play()
+                    if (!remoteVideoRef.current.srcObject) {
+                        remoteVideoRef.current.srcObject = remoteStream
+                        remoteVideoRef?.current?.play()
+                    }
                 })
                 // Store the current call
                 currentCall.current = call
@@ -117,8 +132,10 @@ function Webcall() {
 
                 call.on('stream', (remoteStream) => {
                     console.log('remoteStream', remoteStream)
-                    remoteVideoRef.current.srcObject = remoteStream
-                    remoteVideoRef?.current?.play()
+                    if (!remoteVideoRef.current.srcObject) {
+                        remoteVideoRef.current.srcObject = remoteStream
+                        remoteVideoRef?.current?.play()
+                    }
                 })
                 // Store the current call
                 currentCall.current = call
@@ -178,7 +195,7 @@ function Webcall() {
 
                 <button onClick={toggleVideo}>Toggle Video</button>
 
-                <button onClick={() => hangUp(remotePeerIdValue)}>Hang Up</button>
+                <button onClick={() => hangUp()}>Hang Up</button>
             </div>
 
             <div>
