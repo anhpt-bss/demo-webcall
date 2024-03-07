@@ -35,19 +35,19 @@ function Webcall() {
         // Handle 'call' event when receiving a call
         peer.on('call', (call) => {
             console.log('on call', call)
-            var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia
+            var getUserMedia = navigator?.getUserMedia || navigator?.webkitGetUserMedia || navigator?.mozGetUserMedia
 
             getUserMedia(
-                { video: call.metadata.video, audio: true }, // Determine whether it's an audio or video call
+                { video: call?.metadata?.video, audio: true }, // Determine whether it's an audio or video call
                 (mediaStream) => {
                     // Display the local media stream
                     currentUserVideoRef.current.srcObject = mediaStream
-                    currentUserVideoRef.current.play()
+                    currentUserVideoRef?.current?.play()
                     // Answer the call and display the remote stream
-                    call.answer(mediaStream)
+                    call?.answer(mediaStream)
                     call.on('stream', function (remoteStream) {
                         remoteVideoRef.current.srcObject = remoteStream
-                        remoteVideoRef.current.play()
+                        remoteVideoRef?.current?.play()
                     })
                     // Store the local media stream
                     localStream.current = mediaStream
@@ -73,22 +73,22 @@ function Webcall() {
 
     // Function to initiate an audio call
     const audioCall = (remotePeerId) => {
-        var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia
+        var getUserMedia = navigator?.getUserMedia || navigator?.webkitGetUserMedia || navigator?.mozGetUserMedia
 
         getUserMedia(
             { video: false, audio: true },
             (mediaStream) => {
                 // Display the local media stream
                 currentUserVideoRef.current.srcObject = mediaStream
-                currentUserVideoRef.current.play()
+                currentUserVideoRef?.current?.play()
 
                 // Initiate the call and display the remote stream
-                const call = peerInstance.current.call(remotePeerId, mediaStream, { metadata: { video: false } })
+                const call = peerInstance?.current?.call(remotePeerId, mediaStream, { metadata: { video: false } })
 
                 call.on('stream', (remoteStream) => {
                     console.log('remoteStream', remoteStream)
                     remoteVideoRef.current.srcObject = remoteStream
-                    remoteVideoRef.current.play()
+                    remoteVideoRef?.current?.play()
                 })
                 // Store the current call
                 currentCall.current = call
@@ -103,22 +103,22 @@ function Webcall() {
 
     // Function to initiate a video call
     const videoCall = (remotePeerId) => {
-        var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia
+        var getUserMedia = navigator?.getUserMedia || navigator?.webkitGetUserMedia || navigator?.mozGetUserMedia
 
         getUserMedia(
             { video: true, audio: true },
             (mediaStream) => {
                 // Display the local media stream
                 currentUserVideoRef.current.srcObject = mediaStream
-                currentUserVideoRef.current.play()
+                currentUserVideoRef?.current?.play()
 
                 // Initiate the call and display the remote stream
-                const call = peerInstance.current.call(remotePeerId, mediaStream, { metadata: { video: true } })
+                const call = peerInstance?.current?.call(remotePeerId, mediaStream, { metadata: { video: true } })
 
                 call.on('stream', (remoteStream) => {
                     console.log('remoteStream', remoteStream)
                     remoteVideoRef.current.srcObject = remoteStream
-                    remoteVideoRef.current.play()
+                    remoteVideoRef?.current?.play()
                 })
                 // Store the current call
                 currentCall.current = call
@@ -133,32 +133,32 @@ function Webcall() {
 
     // Function to hang up the call
     const hangUp = () => {
-        if (currentCall.current) {
+        if (currentCall?.current) {
             // Close the local call
-            currentCall.current.close()
+            currentCall?.current?.close()
             currentUserVideoRef.current.srcObject = null
             remoteVideoRef.current.srcObject = null
             // Stop all tracks in the local media stream
-            localStream.current.getTracks().forEach((track) => track.stop())
+            localStream?.current?.getTracks()?.forEach((track) => track?.stop())
         }
     }
 
     // Function to toggle mute/unmute audio
     const toggleAudio = () => {
-        if (localStream.current) {
-            const audioTracks = localStream.current.getAudioTracks()
-            audioTracks.forEach((track) => {
-                track.enabled = !track.enabled // Toggle the enabled state of the audio track
+        if (localStream?.current) {
+            const audioTracks = localStream?.current?.getAudioTracks()
+            audioTracks?.forEach((track) => {
+                track.enabled = !track?.enabled // Toggle the enabled state of the audio track
             })
         }
     }
 
     // Function to toggle enable/disable video
     const toggleVideo = () => {
-        if (localStream.current) {
-            const videoTracks = localStream.current.getVideoTracks()
-            videoTracks.forEach((track) => {
-                track.enabled = !track.enabled // Toggle the enabled state of the video track
+        if (localStream?.current) {
+            const videoTracks = localStream?.current?.getVideoTracks()
+            videoTracks?.forEach((track) => {
+                track.enabled = !track?.enabled // Toggle the enabled state of the video track
             })
         }
     }
@@ -167,7 +167,7 @@ function Webcall() {
         <div className="App">
             <div>{peerId}</div>
 
-            <input type="text" value={remotePeerIdValue} onChange={(e) => setRemotePeerIdValue(e.target.value)} />
+            <input type="text" value={remotePeerIdValue} onChange={(e) => setRemotePeerIdValue(e?.target?.value)} />
 
             <div>
                 <button onClick={() => audioCall(remotePeerIdValue)}>Audio Call</button>
